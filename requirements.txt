@@ -1,0 +1,16 @@
+statsmodels
+quantconnect-lean
+pythonnet
+numpy
+numpy-financial
+pandas
+scipy
+matplotlib
+quantconnect-stubs
+jupyterlab
+ipykernel
+yfinance
+scikit-learn
+seaborn
+linearmodels
+eventstudy
