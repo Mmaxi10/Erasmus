@@ -12,11 +12,13 @@ from pathlib import Path
 
 
 def run_step(script_path: Path) -> None:
+    """Run one pipeline step and fail fast if it exits with an error."""
     print(f"Running {script_path.name}...")
     subprocess.run([sys.executable, str(script_path)], check=True)
 
 
 def main() -> None:
+    """Run formatting first, then cleaning so outputs flow into the model pipeline."""
     base_dir = Path(__file__).resolve().parent
     formatting = base_dir / "DataFormatting.py"
     cleaning = base_dir / "DataCleaning.py"

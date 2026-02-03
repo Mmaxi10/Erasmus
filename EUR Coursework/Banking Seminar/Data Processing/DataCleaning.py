@@ -11,12 +11,7 @@ import argparse
 import re
 from pathlib import Path
 
-try:
-    import pandas as pd
-except ImportError as exc:  # pragma: no cover - makes the dependency explicit for users
-    raise SystemExit(
-        "pandas is required to run this script. Install dependencies from requirements.txt."
-    ) from exc
+import pandas as pd
 
 
 # ---- Editable settings (adjust these before running) ----

@@ -14,12 +14,7 @@ import re
 from pathlib import Path
 from typing import Iterable, List, Tuple
 
-try:
-    import pandas as pd
-except ImportError as exc:  # pragma: no cover - makes the dependency explicit for users
-    raise SystemExit(
-        "pandas is required to run this script. Install dependencies from requirements.txt."
-    ) from exc
+import pandas as pd
 
 
 # The first 13 columns are stable identifiers present in every raw file.
@@ -40,6 +35,7 @@ def _strip_whitespace(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _read_header_lines(path: Path) -> Tuple[List[str], List[str]]:
+    """Read the first two header lines (codes + descriptions) from a raw FFIEC file."""
     with path.open("r", encoding="latin1") as handle:
         codes_line = handle.readline()
         descriptions_line = handle.readline()
@@ -53,6 +49,7 @@ def _read_header_lines(path: Path) -> Tuple[List[str], List[str]]:
 
 
 def _looks_like_data_row(fields: List[str]) -> bool:
+    """Heuristic: detect whether the second line is already data (not descriptions)."""
     if not fields:
         return False
     first = fields[0].strip()
@@ -62,6 +59,7 @@ def _looks_like_data_row(fields: List[str]) -> bool:
 
 
 def _dedupe_headers(headers: List[str], codes: List[str]) -> List[str]:
+    """Make header names unique by appending the FFIEC code when needed."""
     seen: dict[str, int] = {}
     deduped: List[str] = []
     for idx, name in enumerate(headers):
@@ -81,6 +79,7 @@ def _dedupe_headers(headers: List[str], codes: List[str]) -> List[str]:
 
 
 def _build_headers(codes: List[str], descriptions: List[str]) -> Tuple[List[str], int]:
+    """Choose header labels from descriptions when available, otherwise fall back to codes."""
     use_descriptions = bool(descriptions) and not _looks_like_data_row(descriptions)
     if not use_descriptions:
         return [col.strip() for col in codes], 1
@@ -165,11 +164,13 @@ def merge_year_files(files: Iterable[Path]) -> pd.DataFrame:
 
 
 def detect_year_from_dir(path: Path) -> str | None:
+    """Extract a 4-digit year from a folder name (e.g., 'FFIEC_2019')."""
     match = re.search(r"(20\d{2})", path.name)
     return match.group(1) if match else None
 
 
 def transform_all_years(raw_dir: Path, output_dir: Path) -> None:
+    """Scan year folders, merge the slices, and write one CSV per year."""
     raw_dir = raw_dir.expanduser().resolve()
     output_dir = output_dir.expanduser().resolve()
 
