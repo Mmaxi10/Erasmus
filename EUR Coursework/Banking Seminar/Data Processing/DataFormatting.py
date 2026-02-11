@@ -8,7 +8,6 @@ comma-delimited CSV per year under DATA/FFIEC (csv).
 """
 
 from __future__ import annotations
-
 import argparse
 import re
 from pathlib import Path

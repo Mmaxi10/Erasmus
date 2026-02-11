@@ -1,11 +1,8 @@
-"""Run FFIEC data formatting and cleaning in sequence.
-
-Usage:
-    python3 RunDataPipeline.py
+"""
+Run FFIEC data formatting and cleaning in sequence.
 """
 
 from __future__ import annotations
-
 import subprocess
 import sys
 from pathlib import Path
